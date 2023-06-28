@@ -75,3 +75,13 @@ server.post("/participants", async (req, res) => {
     }
   });
   
+  server.get('/participants', async (req, res) => {
+    try {
+        let participants = [];
+        participants = await db.collection('participants').find().toArray();
+        res.send(participants);
+    } catch (error) {
+        console.error(error);
+        res.sendStatus(500);
+    }
+});
