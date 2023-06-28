@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Server Interaction</title>
+  </head>
+  <body>
+    <h1>Server Interaction</h1>
+
+    <h2>Add Participant</h2>
+    <form id="addParticipantForm">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required />
+      <button type="submit">Add</button>
+    </form>
+
+    <h2>Participants</h2>
+    <ul id="participantsList"></ul>
+
+    <script>
+      // Fetch and display participants
+      fetch("http://localhost:5000/participants")
+        .then((response) => response.json())
+        .then((participants) => {
+          const participantsList = document.getElementById("participantsList");
+          participants.forEach((participant) => {
+            const listItem = document.createElement("li");
+            listItem.textContent = participant.name;
+            participantsList.appendChild(listItem);
+          });
+        });
+
+      // Add participant form submission
+      const addParticipantForm = document.getElementById("addParticipantForm");
+      addParticipantForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const name = document.getElementById("name").value;
+
+        fetch("http://localhost:5000/participants", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name }),
+        })
+          .then((response) => {
+            if (response.ok) {
+              location.reload(); // Refresh page to update participants list
+            } else {
+              console.error("Failed to add participant:", response.status);
+            }
+          })
+          .catch((error) => {
+            console.error("Failed to add participant:", error);
+          });
+      });
+    </script>
+  </body>
+</html>
