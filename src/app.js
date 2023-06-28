@@ -6,7 +6,7 @@ import Joi from 'joi';
 import dayjs from 'dayjs';
 
 const server = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 // Middleware
 server.use(cors());
