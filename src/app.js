@@ -144,6 +144,29 @@ server.get('/messages', async (req, res) => {
   }
 });
 
+server.post('/status', async (req, res) => {
+  try{
+      const { user } = req.headers;
+      if(!user){
+          return res.sendStatus(404);
+      }
+      const validate = await db.collection("participants").findOne({ name: user });
+      if(!validate){
+          return res.sendStatus(404);
+      }
+      await db.collection("participants").updateOne({ name: user }, 
+      {
+          $set: {
+              lastStatus: Date.now()                
+          }
+      })
+      return res.sendStatus(200);
+  } catch (error) {
+      console.error(error);
+      res.sendStatus(500);
+  }
+})
+
 
 server.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
